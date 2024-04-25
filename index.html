@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Raytracing menu</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/button.css">
+</head>
+<body>
+<div id="canvas-container">
+    <canvas id="preview-canvas" width="1000" height="480"></canvas>
+</div>
+<div id="controls">
+    <button id="help-btn"><span>Help</span></button>
+    <button id="add-object-btn"><span>Add Object</span></button>
+    <button id="clear-btn"><span>Clear</span></button>
+    <button id="full-btn"><span>Full Screen</span></button>
+    <button id="random-btn"><span>Random Light</span></button>
+    <div class="checkbox-wrapper-46">
+        <input type="checkbox" id="light" class="inp-cbx" />
+        <label for="light" class="cbx"
+        ><span>
+      <svg viewBox="0 0 12 10" height="10px" width="12px">
+        <polyline points="1.5 6 4.5 9 10.5 1"></polyline></svg></span
+        ><span>Stop light</span>
+        </label>
+    </div>
+    <label for="object-type">Object Type:</label>
+    <select id="object-type">
+        <option value="sphere">Sphere</option>
+    </select>
+    <br>
+    <label for="object-color">Object Color:</label>
+    <input type="color" id="object-color" value="#ff0000">
+    <br>
+    <label>Object Position (x, y, z):</label>
+    <input type="number" name="text" class="input" id="object-position-x" placeholder="20">
+    <input type="number" name="text" class="input" id="object-position-y" placeholder="20">
+    <input type="number" name="text" class="input" id="object-position-z" placeholder="20">
+    <div class="PB-range-slider-div">
+        <label>Camera position</label>
+        <input type="range" min="0" max="360" value="0" class="PB-range-slider" id="latitudeSlider">
+        <input type="range" min="0" max="360" value="0" class="PB-range-slider" id="longitudeSlider">
+        <label>distance</label>
+        <input type="range" min="0" max="100" value="10" class="PB-range-slider" id="distanceSlider">
+    </div>
+
+    <br>
+    <label>Object Size:</label>
+    <input type="number" name="text" class="input" id="object-size" placeholder="5">
+</div>
+
+<script src="js/Vector.js"></script>
+<script src="js/render.js"></script>
+<script src="js/index.js"></script>
+</body>
+</html>

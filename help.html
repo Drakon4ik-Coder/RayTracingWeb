@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            overflow: hidden; /* Prevent horizontal scrolling */
+        }
+        .container {
+            display: flex;
+            width: 300%; /* Three pages side by side */
+            height: 100vh;
+            transition: transform 0.5s ease; /* Smooth transition */
+        }
+        .page {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+        }
+        .page:nth-child(1) {
+            background-color: #f0f0f0;
+        }
+        .page:nth-child(2) {
+            background-color: #e0e0e0;
+        }
+        .page:nth-child(3) {
+            background-color: #d0d0d0;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="page">Page 1: Explanation for page 1</div>
+    <div class="page">Page 2: Explanation for page 2</div>
+    <div class="page">Page 3: Explanation for page 3</div>
+</div>
+
+<script>
+    // Track mouse down position
+    let startX;
+
+    // Add mouse down event listener
+    document.addEventListener('mousedown', function(event) {
+        startX = event.clientX;
+    });
+
+    // Add mouse move event listener
+    document.addEventListener('mousemove', function(event) {
+        if (startX !== undefined) {
+            // Calculate mouse move distance
+            let moveX = event.clientX - startX;
+
+            // Move pages container horizontally
+            let container = document.querySelector('.container');
+            container.style.transform = `translateX(-${moveX}px)`;
+        }
+    });
+
+    // Add mouse up event listener
+    document.addEventListener('mouseup', function(event) {
+        if (startX !== undefined) {
+            // Calculate mouse up position
+            let endX = event.clientX;
+
+            // Calculate swipe direction
+            if (endX < startX) {
+                // Swipe left
+                movePage(1); // Move to next page
+            } else if (endX > startX) {
+                // Swipe right
+                movePage(-1); // Move to previous page
+            }
+            startX = undefined;
+        }
+    });
+
+    // Function to move pages
+    function movePage(direction) {
+        let container = document.querySelector('.container');
+        let currentPage = parseInt(container.style.transform.match(/translateX\((\-?\d+)px\)/)[1]);
+        let pageWidth = container.clientWidth;
+
+        // Calculate new position based on page width and direction
+        let newPosition = currentPage + (direction * pageWidth);
+
+        // Limit newPosition to prevent scrolling beyond pages
+        let maxPosition = (container.childElementCount - 1) * pageWidth;
+        newPosition = Math.max(Math.min(newPosition, 0), -maxPosition);
+
+        // Move container to new position
+        container.style.transform = `translateX(${newPosition}px)`;
+    }
+</script>
+</body>
+</html>
