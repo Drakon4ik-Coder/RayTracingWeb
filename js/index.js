@@ -93,6 +93,12 @@ if (jsonData !== null && jsonData !== undefined) {
     scene = JSON.parse(jsonData);
 }
 
+canvas.width = window.innerWidth*0.8;
+canvas.height = window.innerHeight*0.65;
+width = canvas.width;
+height = canvas.height;
+data = ctx.getImageData(0, 0, width, height);
+
 var x = document.getElementById("object-position-x");
 var y = document.getElementById("object-position-y");
 var z = document.getElementById("object-position-z");
