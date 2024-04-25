@@ -11,8 +11,9 @@
             overflow: hidden; /* Prevent horizontal scrolling */
         }
         .container {
+            z-index: 2;
             display: flex;
-            width: 300%; /* Three pages side by side */
+            width: 600%; /* Three pages side by side */
             height: 100vh;
             transition: transform 0.5s ease; /* Smooth transition */
         }
@@ -32,67 +33,186 @@
         .page:nth-child(3) {
             background-color: #d0d0d0;
         }
+        .page:nth-child(4) {
+            background-color: #c0c0c0;
+        }
+        .page:nth-child(5) {
+            background-color: #b0b0b0;
+        }
+        .page:nth-child(6) {
+            background-color: #a0a0a0;
+        }
+        .nav-buttons {
+            z-index: 1;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+        .header {
+            margin-top: 0;
+            text-align: center;
+            position: fixed;
+            top: 0;
+
+        }
+        .main {
+            top: 100%;
+            vertical-align: top;
+            horiz-align: center;
+            text-align: center;
+        }
+        h4 {
+            margin: 0;
+        }
+        .arrow.left{
+            z-index: 1;
+            position:relative;
+            width:30px;
+            height: 30px;
+            cursor:pointer;
+            /*   border:solid 1px white; */
+            transition:0.5s;
+            overflow:hidden;
+        }
+        .arrow.right{
+            z-index: 1;
+            position:relative;
+            width:30px;
+            height: 30px;
+            cursor:pointer;
+            /*   border:solid 1px white; */
+            transition:0.5s;
+            overflow:hidden;
+            transform: rotateZ(180deg);
+        }
+
+        .arrow:hover{
+            /*  animation:borderAni 5s cubic-bezier(0, 0.6, 1, 0.4); */
+            border:solid 2px #000000;
+            border-radius:50%;
+        }
+        .arrow:after{
+            position:absolute;
+            display:block;
+            content:"";
+            color: #000000;
+            width: 20px;
+            height: 15px;
+            /*   border:solid 1px;  */
+            top:-1px;
+            border-bottom:solid 2px;
+            transform:translatex(4px);
+        }
+
+        .arrow:before{
+            position:absolute;
+            display:block;
+            content:"";
+            color: #000000;
+            width: 8px;
+            height: 8px;
+            /*   border:solid 1px;  */
+            border-top:solid 2px;
+            border-left:solid 2px;
+            top:50%;
+            left:2px;
+            transform-origin:0% 0%;
+            transform:rotatez(-45deg);
+
+        }
+
     </style>
 </head>
 <body>
+<div class="nav-buttons">
+    <div class="arrow left"></div>
+    <div class="arrow right"></div>
+</div>
 <div class="container">
-    <div class="page">Page 1: Explanation for page 1</div>
-    <div class="page">Page 2: Explanation for page 2</div>
-    <div class="page">Page 3: Explanation for page 3</div>
+    <div class="page">
+        <div class="header">
+            <h2>Welcome to Help Page</h2>
+        </div>
+        <div class="main">
+            <h4>How The Menu Looks:</h4>
+            <img src="img/demo.gif" alt="Example GIF" width="900">
+        </div>
+    </div>
+    <div class="page">
+        <div class="header">
+            <h2>How to Move Sphere</h2>
+        </div>
+        <div class="main">
+            <h4>Press W,S,A,D,Q,E to move sphere in 3 dimensions</h4>
+            <img src="img/move.gif" alt="Move demo GIF" width="450">
+            <h4>Or enter it manually in input boxes</h4>
+            <img src="img/move-manual.gif" alt="Move manual demo GIF" width="450">
+        </div>
+    </div>
+    <div class="page">
+        <div class="header">
+            <h2>How To Change Sphere Properties</h2>
+        </div>
+        <div class="main">
+            <h4>Enter sphere size and color in input boxes</h4>
+            <img src="img/properties.gif" alt="Properties demo GIF" width="600">
+        </div>
+    </div>
+    <div class="page">
+        <div class="header">
+            <h2>How To Add and Remove Spheres</h2>
+        </div>
+        <div class="main">
+            <h4>Press "Add Object" button to save current sphere on the plane</h4>
+            <img src="img/add-obj.gif" alt="Add object demo GIF" width="450">
+            <h4>Press "Clear" button to remove all saved spheres on the plane</h4>
+            <img src="img/rem-obj.gif" alt="Add object demo GIF" width="450">
+        </div>
+    </div>
+    <div class="page">
+        <div class="header">
+            <h2>How to Control Light and Camera</h2>
+        </div>
+        <div class="main">
+            <h4>Press "Random Light" button to move light randomly and checkbox to disable light movements</h4>
+            <img src="img/light.gif" alt="Light demo GIF" width="450">
+            <h4>Use sliders to control cameras latitude, longitude and distance</h4>
+            <img src="img/camera.gif" alt="Camera demo GIF" width="450">
+        </div>
+    </div>
+    <div class="page">
+        <div class="header">
+            <h2>How To Go Fullscreen and Save Image</h2>
+        </div>
+        <div class="main">
+            <h4>Press "Add Object" button to save current sphere on the plane</h4>
+            <img src="img/fullscreen.gif" alt="Fullscreen demo GIF" width="600">
+        </div>
+    </div>
 </div>
 
 <script>
-    // Track mouse down position
-    let startX;
-
-    // Add mouse down event listener
-    document.addEventListener('mousedown', function(event) {
-        startX = event.clientX;
-    });
-
-    // Add mouse move event listener
-    document.addEventListener('mousemove', function(event) {
-        if (startX !== undefined) {
-            // Calculate mouse move distance
-            let moveX = event.clientX - startX;
-
-            // Move pages container horizontally
-            let container = document.querySelector('.container');
-            container.style.transform = `translateX(-${moveX}px)`;
-        }
-    });
-
-    // Add mouse up event listener
-    document.addEventListener('mouseup', function(event) {
-        if (startX !== undefined) {
-            // Calculate mouse up position
-            let endX = event.clientX;
-
-            // Calculate swipe direction
-            if (endX < startX) {
-                // Swipe left
-                movePage(1); // Move to next page
-            } else if (endX > startX) {
-                // Swipe right
-                movePage(-1); // Move to previous page
-            }
-            startX = undefined;
-        }
-    });
-
+    var leftArr = document.getElementsByClassName("arrow left")[0];
+    var rightArr = document.getElementsByClassName("arrow right")[0];
+    leftArr.addEventListener("click", function () {movePage(-1)});
+    rightArr.addEventListener("click", function () {movePage(1)});
+    var currentPage = 0;
     // Function to move pages
     function movePage(direction) {
         let container = document.querySelector('.container');
-        let currentPage = parseInt(container.style.transform.match(/translateX\((\-?\d+)px\)/)[1]);
         let pageWidth = container.clientWidth;
+        if (currentPage+direction < 0 || currentPage+direction >= container.childElementCount) {
+            return;
+        }
+        currentPage+=direction
 
         // Calculate new position based on page width and direction
-        let newPosition = currentPage + (direction * pageWidth);
-
-        // Limit newPosition to prevent scrolling beyond pages
-        let maxPosition = (container.childElementCount - 1) * pageWidth;
-        newPosition = Math.max(Math.min(newPosition, 0), -maxPosition);
-
+        let newPosition = -currentPage*pageWidth/container.childElementCount;
         // Move container to new position
         container.style.transform = `translateX(${newPosition}px)`;
     }
