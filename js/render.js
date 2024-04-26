@@ -2,8 +2,8 @@ var canvas = document.getElementById('preview-canvas');
 width = canvas.width;
 height = canvas.height;
 var ctx = canvas.getContext('2d');
-data = ctx.getImageData(0, 0, width, height);
-var scene = {};
+data = ctx.getImageData(0, 0, width, height); // directly change canvas pixels
+var scene = {}; // scene for rendering
 
 scene.camera = {
     point: {
@@ -28,15 +28,16 @@ scene.lights = [
 ];
 scene.objects = [];
 
+// render scene
 function render(scene) {
     var camera = scene.camera,
         objects = scene.objects,
         lights = scene.lights;
-    var eyeVector = Vector.unitVector(
+    var eyeVector = Vector.unit_vector(
             Vector.subtract(camera.vector, camera.point)
         ),
-        vpRight = Vector.unitVector(Vector.crossProduct(eyeVector, Vector.UP)),
-        vpUp = Vector.unitVector(Vector.crossProduct(vpRight, eyeVector)),
+        vpRight = Vector.unit_vector(Vector.cross_product(eyeVector, Vector.UP)),
+        vpUp = Vector.unit_vector(Vector.cross_product(vpRight, eyeVector)),
         fovRadians = (Math.PI * (camera.fieldOfView / 2)) / 180,
         heightWidthRatio = height / width,
         halfWidth = Math.tan(fovRadians),
@@ -54,7 +55,7 @@ function render(scene) {
             var xcomp = Vector.scale(vpRight, x * pixelWidth - halfWidth),
                 ycomp = Vector.scale(vpUp, y * pixelHeight - halfHeight);
 
-            ray.vector = Vector.unitVector(Vector.add3(eyeVector, xcomp, ycomp));
+            ray.vector = Vector.unit_vector(Vector.add3(eyeVector, xcomp, ycomp));
             color = trace(ray, scene, 0);
             index = x * 4 + y * width * 4;
             data.data[index] = color.x;
@@ -68,7 +69,7 @@ function render(scene) {
 function trace(ray, scene, depth) {
     if (depth > 3) return;
 
-    var distObject = intersectScene(ray, scene);
+    var distObject = intersect_scene(ray, scene);
     if (distObject[0] === Infinity) {
         return Vector.GREY;
     }
@@ -82,17 +83,17 @@ function trace(ray, scene, depth) {
         scene,
         object,
         pointAtTime,
-        sphereNormal(object, pointAtTime),
+        sphere_normal(object, pointAtTime),
         depth
     );
 }
 
-function intersectScene(ray, scene) {
+function intersect_scene(ray, scene) {
     var closest = [Infinity, null];
     for (var i = 0; i < scene.objects.length; i++) {
         var object = scene.objects[i];
         if (object.type === "sphere") {
-            dist = sphereIntersection(object, ray);
+            dist = intersect_sphere(object, ray);
         }
         if (dist !== undefined && dist < closest[0]) {
             closest = [dist, object];
@@ -101,10 +102,10 @@ function intersectScene(ray, scene) {
     return closest;
 }
 
-function sphereIntersection(sphere, ray) {
+function intersect_sphere(sphere, ray) {
     var eye_to_center = Vector.subtract(sphere.point, ray.point),
-        v = Vector.dotProduct(eye_to_center, ray.vector),
-        eoDot = Vector.dotProduct(eye_to_center, eye_to_center),
+        v = Vector.dot_product(eye_to_center, ray.vector),
+        eoDot = Vector.dot_product(eye_to_center, eye_to_center),
         discriminant = sphere.radius * sphere.radius - eoDot + v * v;
     if (discriminant < 0) {
         return;
@@ -113,8 +114,8 @@ function sphereIntersection(sphere, ray) {
     }
 }
 
-function sphereNormal(sphere, pos) {
-    return Vector.unitVector(Vector.subtract(pos, sphere.point));
+function sphere_normal(sphere, pos) {
+    return Vector.unit_vector(Vector.subtract(pos, sphere.point));
 }
 
 function surface(ray, scene, object, pointAtTime, normal, depth) {
@@ -124,9 +125,9 @@ function surface(ray, scene, object, pointAtTime, normal, depth) {
     if (object.lambert) {
         for (var i = 0; i < scene.lights.length; i++) {
             var lightPoint = scene.lights[i];
-            if (!isLightVisible(pointAtTime, scene, lightPoint)) continue;
-            var contribution = Vector.dotProduct(
-                Vector.unitVector(Vector.subtract(lightPoint, pointAtTime)),
+            if (!is_light_visible(pointAtTime, scene, lightPoint)) continue;
+            var contribution = Vector.dot_product(
+                Vector.unit_vector(Vector.subtract(lightPoint, pointAtTime)),
                 normal
             );
             if (contribution > 0) lambertAmount += contribution;
@@ -135,7 +136,7 @@ function surface(ray, scene, object, pointAtTime, normal, depth) {
     if (object.specular) {
         var reflectedRay = {
             point: pointAtTime,
-            vector: Vector.reflectThrough(ray.vector, normal),
+            vector: Vector.reflect_through(ray.vector, normal),
         };
         var reflectedColor = trace(reflectedRay, scene, ++depth);
         if (reflectedColor) {
@@ -149,11 +150,11 @@ function surface(ray, scene, object, pointAtTime, normal, depth) {
         Vector.scale(b, object.ambient)
     );
 }
-function isLightVisible(pt, scene, light) {
-    var distObject = intersectScene(
+function is_light_visible(pt, scene, light) {
+    var distObject = intersect_scene(
         {
             point: pt,
-            vector: Vector.unitVector(Vector.subtract(pt, light)),
+            vector: Vector.unit_vector(Vector.subtract(pt, light)),
         },
         scene
     );
