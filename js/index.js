@@ -14,10 +14,13 @@ document.addEventListener("DOMContentLoaded", function () {
         y.value = 0;
         z.value = 20;
         size.value = 4;
+        localStorage.setItem("scene", "{}");
     });
     addObjectBtn.addEventListener("click", function () {
         addNewObj();
-        console.log(scene.objects);
+        var jsonData = JSON.stringify(scene);
+
+        localStorage.setItem("scene", jsonData);
     });
     helpBtn.addEventListener("click", function () {
         window.location.href = "help.html";
@@ -89,8 +92,9 @@ function renderLoop() {
 }
 var jsonData = localStorage.getItem("scene");
 if (jsonData !== null && jsonData !== undefined) {
-    console.log(jsonData)
-    scene = JSON.parse(jsonData);
+    if (jsonData!=="{}") {
+        scene=JSON.parse(jsonData);
+    }
 }
 
 canvas.width = window.innerWidth*0.8;
